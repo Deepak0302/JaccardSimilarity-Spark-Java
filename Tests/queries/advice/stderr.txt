@@ -1,0 +1,17 @@
+Exception in thread "main" java.lang.ExceptionInInitializerError
+	at org.apache.spark.unsafe.array.ByteArrayMethods.<clinit>(ByteArrayMethods.java:54)
+	at org.apache.spark.internal.config.package$.<init>(package.scala:1095)
+	at org.apache.spark.internal.config.package$.<clinit>(package.scala)
+	at org.apache.spark.SparkConf$.<init>(SparkConf.scala:654)
+	at org.apache.spark.SparkConf$.<clinit>(SparkConf.scala)
+	at org.apache.spark.SparkConf.set(SparkConf.scala:94)
+	at org.apache.spark.SparkConf.set(SparkConf.scala:83)
+	at org.apache.spark.SparkConf.setAppName(SparkConf.scala:120)
+	at CS1003P4.main(CS1003P4.java:23)
+Caused by: java.lang.reflect.InaccessibleObjectException: Unable to make private java.nio.DirectByteBuffer(long,int) accessible: module java.base does not "opens java.nio" to unnamed module @d8f74ec
+	at java.base/java.lang.reflect.AccessibleObject.checkCanSetAccessible(AccessibleObject.java:354)
+	at java.base/java.lang.reflect.AccessibleObject.checkCanSetAccessible(AccessibleObject.java:297)
+	at java.base/java.lang.reflect.Constructor.checkCanSetAccessible(Constructor.java:191)
+	at java.base/java.lang.reflect.Constructor.setAccessible(Constructor.java:184)
+	at org.apache.spark.unsafe.Platform.<clinit>(Platform.java:56)
+	... 9 more

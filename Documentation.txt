@@ -1,0 +1,66 @@
+Task description 
+The task is to write a Java program to perform a fuzzy string search across a number of files and print any matching results to standard output. The search term will be given in the command line, together with a path to a directory containing text files to be searched and a similarity threshold.
+
+Command line arguments
+
+1. The path to directory that contains a number of text files
+2. The search term (typically multiple words in double quotes, like: "to be or not to be")
+3. The similarity threshold (a floating-point number between 0 and 1).
+
+For example, the following call should search in all text files stored at directory /path/to/datadir for the string "setting sail to the rising wind" with a similarity threshold of 0.75.
+
+java CS1003P4 /path/to/datadir "setting sail to the rising wind" 0.75
+
+The expected output using the 10 books we provide is the following 3 results (in any order).
+
+him setting sail to the rising setting sail to the rising wind sail to the rising wind the
+
+Notice each result has 6 words (the same number of words as the search term) and their Jaccard similarity to the query is at least 0.75 (not displayed in the output).
+
+The search should treat the contents of the text file as a series of words which should be stripped of punctuation and converting to lower case. The search term provided in the command line should also be treated in the same way. A matching result will have the same number of words as the search term. Thus, you should check against all 4 word subsequences if the search string has 4 words in it. You need to implement a sliding window over the stream of words in the text file and consider every sequence of 4 word subsequence. Use Jaccard similarity over 2-character bigrams to calculate similarity. This is very similar the process followed in Practical 1 (except without topping and tailing). You may reuse parts of your old code if you wish.
+
+For example, if the text file contains the following 6 words: "It was the best of times." and if the input query has 3 words the program should compare against the following four 3 word subsquences:
+
+- it was the
+- was the best
+- the best of
+- best of times
+
+In each case the comparison to the search term given at the command line would be performed using Jaccard index calculated using 2-character bigrams.
+
+See the following for some hints.
+
+- The Jaccard similarity between the search term and the matching result should be greater or equal to the given similarity threshold.
+- You should test your similarity method independently of the whole program.
+- You should use JavaSparkContext.textFile or JavaSparkContext.wholeTextFiles to read the contents of the text files.
+- Print one matching result per line to the standard output stream. The order of lines does not matter.
+- We provide test cases on StudRes in the Tests directory. Have a look at how the tests are written and the expected outputs.
+- The data files we provide (in the Tests/data directory) are the most frequently downloaded ebooks in the last 30 days from Project Gutenberg (https://www.gutenberg.org/) at the time of writing.
+
+Code organisation 
+- Create a directory called CS1003-P4 and a file called CS1003P4.java inside of this directory.
+- You may create more classes for organising your code. These should be stored in the same directory.
+- The code will be compiled by running javac *.java in the CS1003-P4 directory. The Spark jar files will be added to the classpath. The jar files are provided in /cs/studres/CS1003/0- General/spark. You are not permitted to use any other external libraries.
+- To run one of the provided tests, copy the Tests directory and place it inside the CS1003-P4 directory and run e.g. Tests/queries/advice/test.sh. Look inside the test.sh scripts to see what they do as well!
+
+Cleaning textual data 
+The textual data you read from the files needs to be cleaned before running a search on it. There are many ways of cleaning/normalising textual data, we chose a very straightforward definition in this practical.
+
+- Remove all non-alphanumeric characters by replacing them with a space character.
+String text = ...;
+text = text.replaceAll("[^a-zA-Z0-9]", " ");
+- Convert the comment text to lowercase.
+text = text.toLowerCase()
+- Split text on whitespace (space, tab and new line characters) to get an array of words.
+text = text.split("[ \t\n\r]")
+
+Jaccard index 
+   There are several ways of calculating a similarity score between strings, in this practical we ask you to use a Jaccard index on character bigrams. This might sound scary at first, but don't worry! We will now define what we mean and give an example.
+
+   The Jaccard index is a similarity measure between sets of objects. It is calculated by dividing the size of the intersection of the two sets by the size of the union of the same two sets. If the two sets are very similar, the value of the Jaccard index will be close to 1 (if the two sets are identical it will be exactly 1). On the other hand, if the two sets are very dissimilar, the value of the Jaccard index will be close to 0 (if the two sets are disjoint it will be exactly 0). Try drawing a few simple Venn diagrams to convince yourselves of this! Wikipedia has a good article on the Jaccard index as well: https://en.wikipedia.org/wiki/Jaccard_index
+
+   In this practical the sets that are being compared are the sets of bigrams composed from the cleaned substrings from the texts and the cleaned string from the query.
+
+
+
+
